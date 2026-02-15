@@ -1,0 +1,47 @@
+{
+  "id": "prompt-orchestrator",
+  "name": "Prompt Orchestrator",
+  "description": "Constrains prompt bloat, routes complex work to orchestrator agents, and enforces safer tool defaults.",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "simpleDelegateAgentId": { "type": "string" },
+      "orchestratorAgentId": { "type": "string" },
+      "maxPromptChars": { "type": "number", "minimum": 400, "maximum": 12000 },
+      "maxMemoryChars": { "type": "number", "minimum": 100, "maximum": 4000 },
+      "complexityThreshold": { "type": "number", "minimum": 1, "maximum": 20 },
+      "requireConfirmationForMutations": { "type": "boolean" },
+      "highRiskTools": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "improver": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "runEveryHours": { "type": "number", "minimum": 1, "maximum": 168 },
+          "mode": { "type": "string", "enum": ["advisory", "gated_apply"] },
+          "allowedWritePaths": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  },
+  "uiHints": {
+    "simpleDelegateAgentId": {
+      "label": "Simple delegate agent",
+      "help": "Agent used for straightforward delegated work"
+    },
+    "orchestratorAgentId": {
+      "label": "Orchestrator agent",
+      "help": "Agent used for complex or high-risk delegated work"
+    },
+    "requireConfirmationForMutations": {
+      "label": "Require confirmation for mutating tools",
+      "help": "Blocks risky tool calls unless params.confirmed is true"
+    }
+  }
+}
