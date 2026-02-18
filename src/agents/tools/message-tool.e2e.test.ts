@@ -25,7 +25,7 @@ function mockSendResult(overrides: { channel?: string; to?: string } = {}) {
     kind: "send",
     action: "send",
     channel: overrides.channel ?? "telegram",
-    ...(overrides.to ? { to: overrides.to } : {}),
+    to: overrides.to ?? "telegram:123",
     handledBy: "plugin",
     payload: {},
     dryRun: true,
@@ -155,6 +155,13 @@ describe("message tool schema scoping", () => {
 
     expect(properties.components).toBeUndefined();
     expect(properties.buttons).toBeDefined();
+    const buttonItemProps =
+      (
+        properties.buttons as {
+          items?: { items?: { properties?: Record<string, unknown> } };
+        }
+      )?.items?.items?.properties ?? {};
+    expect(buttonItemProps.style).toBeDefined();
     expect(actionEnum).toContain("send");
     expect(actionEnum).toContain("react");
     expect(actionEnum).not.toContain("poll");
